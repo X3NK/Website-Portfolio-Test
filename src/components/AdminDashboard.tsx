@@ -6,7 +6,6 @@ import {
   Trash2, 
   Save, 
   X, 
-  Upload,
   Eye,
   Settings,
   BarChart3,
@@ -17,13 +16,17 @@ import { Project } from '../App';
 
 interface AdminDashboardProps {
   projects: Project[];
-  setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
+  onAddProject: (project: Omit<Project, 'id'>) => Promise<Project>;
+  onUpdateProject: (id: number, updates: Partial<Project>) => Promise<Project>;
+  onDeleteProject: (id: number) => Promise<void>;
   onLogout: () => void;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
   projects, 
-  setProjects, 
+  onAddProject,
+  onUpdateProject,
+  onDeleteProject,
   onLogout 
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'portfolio' | 'add' | 'edit' | 'settings'>('overview');
@@ -41,10 +44,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     liveUrl: '',
     caseStudyUrl: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleDeleteProject = (id: number) => {
+  const handleDeleteProject = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
-      setProjects(projects.filter(p => p.id !== id));
+      try {
+        setIsLoading(true);
+        await onDeleteProject(id);
+      } catch (error) {
+        console.error('Failed to delete project:', error);
+        alert('Failed to delete project. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -62,38 +74,60 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setActiveTab('edit');
   };
 
-  const handleSaveProject = () => {
+  const handleSaveProject = async () => {
     if (editingProject) {
-      setProjects(projects.map(p => p.id === editingProject.id ? editingProject : p));
-      setEditingProject(null);
-      setActiveTab('portfolio');
+      try {
+        setIsLoading(true);
+        await onUpdateProject(editingProject.id, editingProject);
+        setEditingProject(null);
+        setActiveTab('portfolio');
+      } catch (error) {
+        console.error('Failed to update project:', error);
+        alert('Failed to update project. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
-  const handleAddProject = () => {
+  const handleAddProject = async () => {
     if (newProject.title && newProject.category && newProject.description) {
-      const id = Math.max(...projects.map(p => p.id), 0) + 1;
-      setProjects([...projects, { 
-        ...newProject, 
-        id,
-        technologies: newProject.technologies || [],
-        features: newProject.features || [],
-        additionalImages: newProject.additionalImages || []
-      } as Project]);
-      setNewProject({ 
-        title: '', 
-        category: '', 
-        image: '', 
-        description: '',
-        overview: '',
-        technologies: [],
-        features: [],
-        year: '',
-        additionalImages: [],
-        liveUrl: '',
-        caseStudyUrl: ''
-      });
-      setActiveTab('portfolio');
+      try {
+        setIsLoading(true);
+        await onAddProject({
+          title: newProject.title,
+          category: newProject.category,
+          image: newProject.image || '',
+          description: newProject.description,
+          overview: newProject.overview,
+          technologies: newProject.technologies,
+          features: newProject.features,
+          year: newProject.year,
+          additionalImages: newProject.additionalImages,
+          liveUrl: newProject.liveUrl,
+          caseStudyUrl: newProject.caseStudyUrl
+        });
+        
+        setNewProject({ 
+          title: '', 
+          category: '', 
+          image: '', 
+          description: '',
+          overview: '',
+          technologies: [],
+          features: [],
+          year: '',
+          additionalImages: [],
+          liveUrl: '',
+          caseStudyUrl: ''
+        });
+        setActiveTab('portfolio');
+      } catch (error) {
+        console.error('Failed to add project:', error);
+        alert('Failed to add project. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -310,6 +344,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <button
                           onClick={() => handleEditProject(project)}
                           className="flex-1 bg-grunge-purple text-grunge-gray px-4 py-2 text-sm font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300 flex items-center justify-center space-x-1"
+                          disabled={isLoading}
                         >
                           <Edit size={14} />
                           <span>EDIT</span>
@@ -317,6 +352,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <button
                           onClick={() => handleDeleteProject(project.id)}
                           className="bg-red-500/20 text-red-400 px-4 py-2 text-sm font-semibold hover:bg-red-500 hover:text-white transition-all duration-300 flex items-center justify-center"
+                          disabled={isLoading}
                         >
                           <Trash2 size={14} />
                         </button>
@@ -450,10 +486,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <div className="flex space-x-4 mt-8">
                   <button
                     onClick={handleAddProject}
-                    className="bg-grunge-purple text-grunge-gray px-8 py-3 font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300 flex items-center space-x-2"
+                    disabled={isLoading}
+                    className="bg-grunge-purple text-grunge-gray px-8 py-3 font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
                   >
                     <Plus size={20} />
-                    <span>ADD PROJECT</span>
+                    <span>{isLoading ? 'ADDING...' : 'ADD PROJECT'}</span>
                   </button>
                   <button
                     onClick={() => setNewProject({ 
@@ -600,10 +637,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <div className="flex space-x-4 mt-8">
                   <button
                     onClick={handleSaveProject}
-                    className="bg-grunge-purple text-grunge-gray px-8 py-3 font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300 flex items-center space-x-2"
+                    disabled={isLoading}
+                    className="bg-grunge-purple text-grunge-gray px-8 py-3 font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
                   >
                     <Save size={20} />
-                    <span>SAVE CHANGES</span>
+                    <span>{isLoading ? 'SAVING...' : 'SAVE CHANGES'}</span>
                   </button>
                   <button
                     onClick={() => {
