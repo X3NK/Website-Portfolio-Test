@@ -15,6 +15,13 @@ export interface Project {
   category: string;
   image: string;
   description: string;
+  overview?: string;
+  technologies?: string[];
+  features?: string[];
+  year?: string;
+  additionalImages?: string[];
+  liveUrl?: string;
+  caseStudyUrl?: string;
 }
 
 function App() {
@@ -28,6 +35,16 @@ function App() {
       category: 'Graphic Design',
       image: 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800',
       description: 'A series of posters exploring the intersection of analog and digital aesthetics.',
+      overview: 'This project explores the intersection of analog and digital aesthetics, combining traditional design principles with modern digital techniques.',
+      technologies: ['Adobe Photoshop', 'Illustrator', 'After Effects'],
+      features: ['Innovative blend of analog and digital aesthetics', 'Custom typography and visual elements'],
+      year: '2024',
+      additionalImages: [
+        'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800',
+        'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800'
+      ],
+      liveUrl: '',
+      caseStudyUrl: ''
     },
     {
       id: 2,
@@ -35,6 +52,15 @@ function App() {
       category: 'Web Design',
       image: 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800',
       description: 'Interactive web experience combining retro computing with modern design.',
+      overview: 'Interactive web experience that bridges retro computing aesthetics with contemporary design principles.',
+      technologies: ['React', 'TypeScript', 'CSS3'],
+      features: ['Responsive design', 'Interactive animations', 'Modern web standards'],
+      year: '2024',
+      additionalImages: [
+        'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800'
+      ],
+      liveUrl: '',
+      caseStudyUrl: ''
     },
     {
       id: 3,
@@ -42,6 +68,13 @@ function App() {
       category: 'Brand Identity',
       image: 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800',
       description: 'Complete brand identity for a digital art collective.',
+      overview: 'Comprehensive brand identity development for a forward-thinking digital art collective.',
+      technologies: ['Adobe Illustrator', 'Photoshop', 'InDesign'],
+      features: ['Logo design', 'Brand guidelines', 'Typography system'],
+      year: '2024',
+      additionalImages: [],
+      liveUrl: '',
+      caseStudyUrl: ''
     },
     {
       id: 4,
@@ -49,6 +82,13 @@ function App() {
       category: 'Typography',
       image: 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800',
       description: 'Experimental typography series exploring digital corruption as art.',
+      overview: 'An experimental typography series that explores digital corruption and glitch aesthetics as artistic expression.',
+      technologies: ['Adobe After Effects', 'Photoshop', 'Custom Scripts'],
+      features: ['Experimental typography', 'Digital corruption effects', 'Artistic expression'],
+      year: '2024',
+      additionalImages: [],
+      liveUrl: '',
+      caseStudyUrl: ''
     },
     {
       id: 5,
@@ -56,6 +96,13 @@ function App() {
       category: 'UI/UX',
       image: 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800',
       description: 'Mobile app interface inspired by 80s computer terminals.',
+      overview: 'Mobile application interface design inspired by 1980s computer terminals and retro-futuristic aesthetics.',
+      technologies: ['Figma', 'Principle', 'Adobe XD'],
+      features: ['Retro-inspired UI', 'Mobile-first design', 'Interactive prototypes'],
+      year: '2024',
+      additionalImages: [],
+      liveUrl: '',
+      caseStudyUrl: ''
     },
     {
       id: 6,
@@ -63,6 +110,13 @@ function App() {
       category: 'Illustration',
       image: 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800',
       description: 'Digital illustrations using procedural noise and glitch techniques.',
+      overview: 'A series of digital illustrations created using procedural noise generation and glitch art techniques.',
+      technologies: ['Processing', 'Adobe Illustrator', 'Custom Algorithms'],
+      features: ['Procedural generation', 'Glitch techniques', 'Digital art'],
+      year: '2024',
+      additionalImages: [],
+      liveUrl: '',
+      caseStudyUrl: ''
     },
   ]);
 

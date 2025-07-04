@@ -33,6 +33,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     category: '',
     image: '',
     description: '',
+    overview: '',
+    technologies: [],
+    features: [],
+    year: '',
+    additionalImages: [],
+    liveUrl: '',
+    caseStudyUrl: ''
   });
 
   const handleDeleteProject = (id: number) => {
@@ -42,7 +49,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleEditProject = (project: Project) => {
-    setEditingProject(project);
+    setEditingProject({
+      ...project,
+      technologies: project.technologies || [],
+      features: project.features || [],
+      additionalImages: project.additionalImages || [],
+      overview: project.overview || '',
+      year: project.year || '',
+      liveUrl: project.liveUrl || '',
+      caseStudyUrl: project.caseStudyUrl || ''
+    });
     setActiveTab('edit');
   };
 
@@ -57,9 +73,36 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleAddProject = () => {
     if (newProject.title && newProject.category && newProject.description) {
       const id = Math.max(...projects.map(p => p.id), 0) + 1;
-      setProjects([...projects, { ...newProject, id } as Project]);
-      setNewProject({ title: '', category: '', image: '', description: '' });
+      setProjects([...projects, { 
+        ...newProject, 
+        id,
+        technologies: newProject.technologies || [],
+        features: newProject.features || [],
+        additionalImages: newProject.additionalImages || []
+      } as Project]);
+      setNewProject({ 
+        title: '', 
+        category: '', 
+        image: '', 
+        description: '',
+        overview: '',
+        technologies: [],
+        features: [],
+        year: '',
+        additionalImages: [],
+        liveUrl: '',
+        caseStudyUrl: ''
+      });
       setActiveTab('portfolio');
+    }
+  };
+
+  const updateArrayField = (field: 'technologies' | 'features' | 'additionalImages', value: string, isEditing = false) => {
+    const items = value.split(',').map(item => item.trim()).filter(item => item);
+    if (isEditing && editingProject) {
+      setEditingProject({ ...editingProject, [field]: items });
+    } else {
+      setNewProject({ ...newProject, [field]: items });
     }
   };
 
@@ -312,8 +355,28 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       placeholder="Category"
                     />
                   </div>
+                  <div>
+                    <label className="block text-grunge-gray font-medium mb-2">Year</label>
+                    <input
+                      type="text"
+                      value={newProject.year || ''}
+                      onChange={(e) => setNewProject({ ...newProject, year: e.target.value })}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray placeholder-grunge-gray/50 focus:outline-none focus:border-grunge-purple"
+                      placeholder="2024"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-grunge-gray font-medium mb-2">Live URL</label>
+                    <input
+                      type="url"
+                      value={newProject.liveUrl || ''}
+                      onChange={(e) => setNewProject({ ...newProject, liveUrl: e.target.value })}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray placeholder-grunge-gray/50 focus:outline-none focus:border-grunge-purple"
+                      placeholder="https://example.com"
+                    />
+                  </div>
                   <div className="md:col-span-2">
-                    <label className="block text-grunge-gray font-medium mb-2">Image URL</label>
+                    <label className="block text-grunge-gray font-medium mb-2">Main Image URL</label>
                     <input
                       type="url"
                       value={newProject.image || ''}
@@ -323,13 +386,63 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     />
                   </div>
                   <div className="md:col-span-2">
+                    <label className="block text-grunge-gray font-medium mb-2">Additional Images (comma separated URLs)</label>
+                    <input
+                      type="text"
+                      value={newProject.additionalImages?.join(', ') || ''}
+                      onChange={(e) => updateArrayField('additionalImages', e.target.value)}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray placeholder-grunge-gray/50 focus:outline-none focus:border-grunge-purple"
+                      placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
                     <label className="block text-grunge-gray font-medium mb-2">Description</label>
                     <textarea
                       value={newProject.description || ''}
                       onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                      rows={4}
+                      rows={3}
                       className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray placeholder-grunge-gray/50 focus:outline-none focus:border-grunge-purple resize-none"
                       placeholder="Project description..."
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-grunge-gray font-medium mb-2">Project Overview</label>
+                    <textarea
+                      value={newProject.overview || ''}
+                      onChange={(e) => setNewProject({ ...newProject, overview: e.target.value })}
+                      rows={4}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray placeholder-grunge-gray/50 focus:outline-none focus:border-grunge-purple resize-none"
+                      placeholder="Detailed project overview..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-grunge-gray font-medium mb-2">Technologies (comma separated)</label>
+                    <input
+                      type="text"
+                      value={newProject.technologies?.join(', ') || ''}
+                      onChange={(e) => updateArrayField('technologies', e.target.value)}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray placeholder-grunge-gray/50 focus:outline-none focus:border-grunge-purple"
+                      placeholder="React, TypeScript, CSS3"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-grunge-gray font-medium mb-2">Case Study URL</label>
+                    <input
+                      type="url"
+                      value={newProject.caseStudyUrl || ''}
+                      onChange={(e) => setNewProject({ ...newProject, caseStudyUrl: e.target.value })}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray placeholder-grunge-gray/50 focus:outline-none focus:border-grunge-purple"
+                      placeholder="https://example.com/case-study"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-grunge-gray font-medium mb-2">Key Features (comma separated)</label>
+                    <input
+                      type="text"
+                      value={newProject.features?.join(', ') || ''}
+                      onChange={(e) => updateArrayField('features', e.target.value)}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray placeholder-grunge-gray/50 focus:outline-none focus:border-grunge-purple"
+                      placeholder="Responsive design, Interactive animations, Modern web standards"
                     />
                   </div>
                 </div>
@@ -343,7 +456,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <span>ADD PROJECT</span>
                   </button>
                   <button
-                    onClick={() => setNewProject({ title: '', category: '', image: '', description: '' })}
+                    onClick={() => setNewProject({ 
+                      title: '', 
+                      category: '', 
+                      image: '', 
+                      description: '',
+                      overview: '',
+                      technologies: [],
+                      features: [],
+                      year: '',
+                      additionalImages: [],
+                      liveUrl: '',
+                      caseStudyUrl: ''
+                    })}
                     className="bg-transparent border border-grunge-gray text-grunge-gray px-8 py-3 font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300"
                   >
                     CLEAR FORM
@@ -389,8 +514,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple"
                     />
                   </div>
+                  <div>
+                    <label className="block text-grunge-gray font-medium mb-2">Year</label>
+                    <input
+                      type="text"
+                      value={editingProject.year || ''}
+                      onChange={(e) => setEditingProject({ ...editingProject, year: e.target.value })}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-grunge-gray font-medium mb-2">Live URL</label>
+                    <input
+                      type="url"
+                      value={editingProject.liveUrl || ''}
+                      onChange={(e) => setEditingProject({ ...editingProject, liveUrl: e.target.value })}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple"
+                    />
+                  </div>
                   <div className="md:col-span-2">
-                    <label className="block text-grunge-gray font-medium mb-2">Image URL</label>
+                    <label className="block text-grunge-gray font-medium mb-2">Main Image URL</label>
                     <input
                       type="url"
                       value={editingProject.image}
@@ -399,12 +542,57 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     />
                   </div>
                   <div className="md:col-span-2">
+                    <label className="block text-grunge-gray font-medium mb-2">Additional Images (comma separated URLs)</label>
+                    <input
+                      type="text"
+                      value={editingProject.additionalImages?.join(', ') || ''}
+                      onChange={(e) => updateArrayField('additionalImages', e.target.value, true)}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
                     <label className="block text-grunge-gray font-medium mb-2">Description</label>
                     <textarea
                       value={editingProject.description}
                       onChange={(e) => setEditingProject({ ...editingProject, description: e.target.value })}
+                      rows={3}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple resize-none"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-grunge-gray font-medium mb-2">Project Overview</label>
+                    <textarea
+                      value={editingProject.overview || ''}
+                      onChange={(e) => setEditingProject({ ...editingProject, overview: e.target.value })}
                       rows={4}
                       className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple resize-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-grunge-gray font-medium mb-2">Technologies (comma separated)</label>
+                    <input
+                      type="text"
+                      value={editingProject.technologies?.join(', ') || ''}
+                      onChange={(e) => updateArrayField('technologies', e.target.value, true)}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-grunge-gray font-medium mb-2">Case Study URL</label>
+                    <input
+                      type="url"
+                      value={editingProject.caseStudyUrl || ''}
+                      onChange={(e) => setEditingProject({ ...editingProject, caseStudyUrl: e.target.value })}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-grunge-gray font-medium mb-2">Key Features (comma separated)</label>
+                    <input
+                      type="text"
+                      value={editingProject.features?.join(', ') || ''}
+                      onChange={(e) => updateArrayField('features', e.target.value, true)}
+                      className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple"
                     />
                   </div>
                 </div>
@@ -460,7 +648,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <label className="block text-grunge-gray font-medium mb-2">Contact Email</label>
                     <input
                       type="email"
-                      value="denys@digitalutopia.com"
+                      value="usachikdenys@gmail.com"
                       className="w-full px-4 py-3 bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray focus:outline-none focus:border-grunge-purple"
                     />
                   </div>

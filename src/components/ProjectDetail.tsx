@@ -8,11 +8,10 @@ interface ProjectDetailProps {
 }
 
 const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack }) => {
-  // Mock additional images for the project
+  // Use project's additional images or fallback to main image
   const projectImages = [
     project.image,
-    'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800',
-    'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=800',
+    ...(project.additionalImages || [])
   ];
 
   return (
@@ -44,17 +43,19 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack }) => {
             </div>
             
             {/* Additional Images Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {projectImages.slice(1).map((image, index) => (
-                <div key={index} className="aspect-square overflow-hidden bg-grunge-gray/10">
-                  <img
-                    src={image}
-                    alt={`${project.title} - Image ${index + 2}`}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 cursor-pointer"
-                  />
-                </div>
-              ))}
-            </div>
+            {project.additionalImages && project.additionalImages.length > 0 && (
+              <div className="grid grid-cols-2 gap-4">
+                {project.additionalImages.map((image, index) => (
+                  <div key={index} className="aspect-square overflow-hidden bg-grunge-gray/10">
+                    <img
+                      src={image}
+                      alt={`${project.title} - Image ${index + 2}`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 cursor-pointer"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Project Info */}
@@ -66,7 +67,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack }) => {
                 </span>
                 <div className="flex items-center space-x-2 text-grunge-gray/60 text-sm">
                   <Calendar size={16} />
-                  <span>2024</span>
+                  <span>{project.year || '2024'}</span>
                 </div>
               </div>
               
@@ -81,61 +82,68 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack }) => {
 
             {/* Project Details */}
             <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-bold text-grunge-gray mb-4">Project Overview</h3>
-                <p className="text-grunge-gray/80 leading-relaxed">
-                  This project explores the intersection of analog and digital aesthetics, 
-                  combining traditional design principles with modern digital techniques. 
-                  The work represents a unique approach to visual communication that bridges 
-                  the gap between nostalgic and futuristic design elements.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold text-grunge-gray mb-4">Technologies Used</h3>
-                <div className="flex flex-wrap gap-2">
-                  {['Adobe Photoshop', 'Illustrator', 'After Effects', 'Figma'].map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray px-3 py-1 text-sm"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+              {project.overview && (
+                <div>
+                  <h3 className="text-xl font-bold text-grunge-gray mb-4">Project Overview</h3>
+                  <p className="text-grunge-gray/80 leading-relaxed">
+                    {project.overview}
+                  </p>
                 </div>
-              </div>
+              )}
 
-              <div>
-                <h3 className="text-xl font-bold text-grunge-gray mb-4">Key Features</h3>
-                <ul className="space-y-2 text-grunge-gray/80">
-                  <li className="flex items-start space-x-2">
-                    <span className="text-grunge-purple mt-1">•</span>
-                    <span>Innovative blend of analog and digital aesthetics</span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <span className="text-grunge-purple mt-1">•</span>
-                    <span>Custom typography and visual elements</span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <span className="text-grunge-purple mt-1">•</span>
-                    <span>Experimental approach to visual communication</span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <span className="text-grunge-purple mt-1">•</span>
-                    <span>Cohesive brand identity development</span>
-                  </li>
-                </ul>
-              </div>
+              {project.technologies && project.technologies.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-bold text-grunge-gray mb-4">Technologies Used</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {project.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="bg-grunge-gray/10 border border-grunge-gray/20 text-grunge-gray px-3 py-1 text-sm"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {project.features && project.features.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-bold text-grunge-gray mb-4">Key Features</h3>
+                  <ul className="space-y-2 text-grunge-gray/80">
+                    {project.features.map((feature, index) => (
+                      <li key={index} className="flex items-start space-x-2">
+                        <span className="text-grunge-purple mt-1">•</span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex space-x-4 pt-6">
-                <button className="bg-grunge-purple text-grunge-gray px-8 py-3 font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300 flex items-center space-x-2">
-                  <ExternalLink size={20} />
-                  <span>VIEW LIVE</span>
-                </button>
-                <button className="bg-transparent border border-grunge-gray text-grunge-gray px-8 py-3 font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300">
-                  CASE STUDY
-                </button>
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-grunge-purple text-grunge-gray px-8 py-3 font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300 flex items-center space-x-2"
+                  >
+                    <ExternalLink size={20} />
+                    <span>VIEW LIVE</span>
+                  </a>
+                )}
+                {project.caseStudyUrl && (
+                  <a
+                    href={project.caseStudyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-transparent border border-grunge-gray text-grunge-gray px-8 py-3 font-semibold hover:bg-grunge-gray hover:text-grunge-dark transition-all duration-300"
+                  >
+                    CASE STUDY
+                  </a>
+                )}
               </div>
             </div>
           </div>

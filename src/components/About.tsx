@@ -4,7 +4,6 @@ import { Code, Palette, Monitor, Layers } from 'lucide-react';
 const About = () => {
   const skills = [
     { icon: <Palette size={24} />, title: 'Graphic Design', desc: 'Visual identity, posters, print design' },
-    { icon: <Code size={24} />, title: 'Web Development', desc: 'Frontend development, interactive experiences' },
     { icon: <Monitor size={24} />, title: 'UI/UX Design', desc: 'User interface design, prototyping' },
     { icon: <Layers size={24} />, title: 'Brand Identity', desc: 'Logo design, brand guidelines, typography' },
   ];
@@ -57,21 +56,6 @@ const About = () => {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Philosophy Section */}
-        <div className="mt-20 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-grunge-gray mb-6">
-              DESIGN PHILOSOPHY
-            </h3>
-            <blockquote className="text-xl italic text-grunge-gray/80 leading-relaxed">
-              "In a world obsessed with perfection, I find beauty in the glitches, 
-              the grain, the happy accidents that happen when analog meets digital. 
-              True creativity lives in the space between order and chaos."
-            </blockquote>
-            <cite className="text-grunge-purple mt-4 block">— Denys Usachik</cite>
           </div>
         </div>
       </div>

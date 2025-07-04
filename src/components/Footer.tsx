@@ -7,10 +7,10 @@ const Footer = () => {
   return (
     <footer className="bg-grunge-dark border-t border-grunge-gray/20 py-12">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="text-center">
           {/* Brand */}
-          <div>
-            <div className="logo-container mb-4">
+          <div className="mb-8">
+            <div className="logo-container mb-4 flex justify-center">
               <svg 
                 className="logo-svg" 
                 width="60" 
@@ -28,7 +28,7 @@ const Footer = () => {
             <p className="text-grunge-gray/80 mb-4">
               Crafting digital experiences where analog aesthetics meet modern innovation.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex justify-center space-x-4">
               <a href="#" className="text-grunge-gray hover:text-grunge-purple transition-colors">
                 <Github size={20} />
               </a>
@@ -44,45 +44,12 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Navigation */}
-          <div>
-            <h4 className="text-grunge-gray font-semibold mb-4">NAVIGATION</h4>
-            <ul className="space-y-2">
-              <li>
-                <a href="#portfolio" className="text-grunge-gray/80 hover:text-grunge-purple transition-colors">
-                  Portfolio
-                </a>
-              </li>
-              <li>
-                <a href="#about" className="text-grunge-gray/80 hover:text-grunge-purple transition-colors">
-                  About Project
-                </a>
-              </li>
-              <li>
-                <a href="#contact" className="text-grunge-gray/80 hover:text-grunge-purple transition-colors">
-                  Contact
-                </a>
-              </li>
-            </ul>
+          <div className="border-t border-grunge-gray/20 pt-8">
+            <p className="text-grunge-gray/60 text-sm">
+              2025 © Digital Utopia. All rights reserved. 
+              <span className="text-grunge-purple"> Creativity lives here.</span>
+            </p>
           </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="text-grunge-gray font-semibold mb-4">SERVICES</h4>
-            <ul className="space-y-2">
-              <li className="text-grunge-gray/80">Graphic Design</li>
-              <li className="text-grunge-gray/80">Web Development</li>
-              <li className="text-grunge-gray/80">Brand Identity</li>
-              <li className="text-grunge-gray/80">UI/UX Design</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-t border-grunge-gray/20 mt-8 pt-8 text-center">
-          <p className="text-grunge-gray/60 text-sm">
-            © {currentYear} D:YU Digital Utopia. All rights reserved. 
-            <span className="text-grunge-purple"> Creativity lives here.</span>
-          </p>
         </div>
       </div>
     </footer>
