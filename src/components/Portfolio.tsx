@@ -1,12 +1,13 @@
 import React from 'react';
-import { ExternalLink, Github } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { Project } from '../App';
 
 interface PortfolioProps {
   projects: Project[];
+  onProjectClick: (project: Project) => void;
 }
 
-const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
+const Portfolio: React.FC<PortfolioProps> = ({ projects, onProjectClick }) => {
   return (
     <section id="portfolio" className="py-20 bg-grunge-dark relative grunge-texture">
       <div className="container mx-auto px-4">
@@ -23,9 +24,10 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="group relative overflow-hidden bg-grunge-gray/10 hover:bg-grunge-gray/20 transition-all duration-500 transform hover:scale-105"
+              className="group relative overflow-hidden bg-grunge-gray/10 hover:bg-grunge-gray/20 transition-all duration-500 transform hover:scale-105 cursor-pointer"
+              onClick={() => onProjectClick(project)}
             >
-              <div className="aspect-[4/3] relative overflow-hidden">
+              <div className="aspect-square relative overflow-hidden">
                 <img
                   src={project.image}
                   alt={project.title}
@@ -38,9 +40,6 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
                   <div className="flex space-x-4">
                     <button className="p-3 bg-grunge-gray text-grunge-dark rounded-full hover:bg-grunge-dark hover:text-grunge-gray transition-colors">
                       <ExternalLink size={20} />
-                    </button>
-                    <button className="p-3 bg-grunge-gray text-grunge-dark rounded-full hover:bg-grunge-dark hover:text-grunge-gray transition-colors">
-                      <Github size={20} />
                     </button>
                   </div>
                 </div>

@@ -7,6 +7,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
+import ProjectDetail from './components/ProjectDetail';
 
 export interface Project {
   id: number;
@@ -19,6 +20,7 @@ export interface Project {
 function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projects, setProjects] = useState<Project[]>([
     {
       id: 1,
@@ -79,6 +81,24 @@ function App() {
     setIsAdminAuthenticated(false);
   };
 
+  const handleProjectClick = (project: Project) => {
+    setSelectedProject(project);
+  };
+
+  const handleBackToPortfolio = () => {
+    setSelectedProject(null);
+  };
+
+  // If project is selected, show project detail page
+  if (selectedProject) {
+    return (
+      <ProjectDetail 
+        project={selectedProject}
+        onBack={handleBackToPortfolio}
+      />
+    );
+  }
+
   // If admin is authenticated, show dashboard
   if (isAdminAuthenticated) {
     return (
@@ -106,7 +126,7 @@ function App() {
       <Header onAdminAccess={handleAdminAccess} />
       <main>
         <Hero />
-        <Portfolio projects={projects} />
+        <Portfolio projects={projects} onProjectClick={handleProjectClick} />
         <About />
         <Contact />
       </main>
